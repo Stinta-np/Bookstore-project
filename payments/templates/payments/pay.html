@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.payment-container {
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+.payment-header {
+  background: linear-gradient(135deg, #5C3317, #8B4513);
+  color: #F5F5DC;
+  padding: 2.5rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.payment-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin: 0 0 0.5rem 0;
+  color: #DAA520;
+}
+
+.payment-subtitle {
+  color: #F5E6D3;
+  font-size: 1.05rem;
+}
+
+.payment-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 15px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.amount-display {
+  background: #F5E6D3;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 2rem;
+  border: 2px solid #DAA520;
+}
+
+.amount-label {
+  color: #6B5B4F;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.amount-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.payment-methods {
+  margin-bottom: 2rem;
+}
+
+.method-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #5C3317;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.payment-option {
+  background: #F5F5DC;
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.payment-option:hover {
+  border-color: #8B4513;
+  transform: translateX(5px);
+  background: #FFF;
+}
+
+.payment-option.selected {
+  border-color: #28A745;
+  background: #D4EDDA;
+}
+
+.payment-icon {
+  width: 60px;
+  height: 60px;
+  background: #8B4513;
+  color: #FFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.payment-option.selected .payment-icon {
+  background: #28A745;
+}
+
+.payment-details h4 {
+  font-family: 'Playfair Display', serif;
+  color: #5C3317;
+  margin-bottom: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.payment-details p {
+  color: #6B5B4F;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.security-badge {
+  background: #E7F3FF;
+  border-left: 4px solid #0066CC;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.security-badge i {
+  color: #0066CC;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.btn-pay-now {
+  width: 100%;
+  background: #28A745;
+  color: #FFF;
+  border: none;
+  padding: 1.25rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+}
+
+.btn-pay-now:hover {
+  background: #218838;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(40,167,69,0.4);
+}
+
+.btn-pay-now:disabled {
+  background: #6C757D;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-cancel {
+  width: 100%;
+  background: transparent;
+  color: #8B4513;
+  border: 2px solid #8B4513;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.btn-cancel:hover {
+  background: #8B4513;
+  color: #FFF;
+}
+
+.order-summary {
+  background: #F5F5DC;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #D4C4B0;
+}
+
+.summary-label {
+  color: #6B5B4F;
+}
+
+.summary-value {
+  color: #5C3317;
+  font-weight: 600;
+}
+
+.razorpay-button {
+  display: none;
+}
+</style>
+
+<div class="payment-container">
+  <!-- Payment Header -->
+  <div class="payment-header">
+    <h1 class="payment-title">
+      <i class="fas fa-lock"></i> Complete Payment
+    </h1>
+    <p class="payment-subtitle">Secure payment gateway powered by Razorpay</p>
+  </div>
+
+  <!-- Payment Card -->
+  <div class="payment-card">
+    <!-- Amount Display -->
+    <div class="amount-display">
+      <div class="amount-label">
+        <i class="fas fa-rupee-sign"></i> Total Amount
+      </div>
+      <div class="amount-value">₹{{ amount|default:"0" }}</div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h4 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1rem;">
+        <i class="fas fa-receipt"></i> Order Summary
+      </h4>
+      
+      <div class="summary-row">
+        <span class="summary-label">Order ID</span>
+        <span class="summary-value">#{{ order.id }}</span>
+      </div>
+      
+      <div class="summary-row">
+        <span class="summary-label">Items</span>
+        <span class="summary-value">{{ order.items.count }} book(s)</span>
+      </div>
+      
+      <div class="summary-row" style="border-bottom: none;">
+        <span class="summary-label">Order Date</span>
+        <span class="summary-value">{{ order.created_at|date:"d M Y" }}</span>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="payment-methods">
+      <h3 class="method-title">
+        <i class="fas fa-credit-card"></i> Select Payment Method
+      </h3>
+
+      <div class="payment-option selected" onclick="selectPayment('razorpay')">
+        <div class="payment-icon">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <div class="payment-details">
+          <h4>Card / UPI / Netbanking</h4>
+          <p>Pay securely using Razorpay</p>
+        </div>
+      </div>
+
+      <div class="payment-option" onclick="selectPayment('cod')">
+        <div class="payment-icon">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <div class="payment-details">
+          <h4>Cash on Delivery</h4>
+          <p>Pay when you receive your order</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Badge -->
+    <div class="security-badge">
+      <i class="fas fa-shield-alt"></i>
+      <strong>100% Secure Payment:</strong> Your payment information is encrypted and secure. 
+      We never store your card details.
+    </div>
+
+    <!-- Razorpay Payment Form -->
+    <form action="{% url 'payments:success' %}" method="POST" id="razorpay-form">
+      {% csrf_token %}
+      <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ razorpay_key }}"
+        data-amount="{{ amount }}"
+        data-currency="INR"
+        data-order_id="{{ order.razorpay_order_id }}"
+        data-buttontext="Pay Now"
+        data-name="Classic Bookstore"
+        data-description="Order Payment"
+        data-image="/static/images/logo.png"
+        data-theme.color="#8B4513">
+      </script>
+    </form>
+
+    <!-- Pay Button -->
+    <button id="pay-btn" class="btn-pay-now">
+      <i class="fas fa-lock"></i> Proceed to Payment
+    </button>
+
+    <a href="{% url 'books:view_cart' %}" class="btn-cancel">
+      <i class="fas fa-arrow-left"></i> Back to Cart
+    </a>
+  </div>
+
+  <!-- Payment Info -->
+  <div style="background: #F5E6D3; padding: 1.5rem; border-radius: 10px; text-align: center;">
+    <p style="color: #6B5B4F; margin: 0; font-size: 0.95rem;">
+      <i class="fas fa-info-circle"></i>
+      By proceeding with payment, you agree to our Terms & Conditions
+    </p>
+  </div>
+</div>
+
+<script>
+let selectedPayment = 'razorpay';
+
+function selectPayment(method) {
+  selectedPayment = method;
+  document.querySelectorAll('.payment-option').forEach(opt => {
+    opt.classList.remove('selected');
+  });
+  event.currentTarget.classList.add('selected');
+}
+
+document.getElementById('pay-btn').addEventListener('click', function() {
+  if (selectedPayment === 'razorpay') {
+    // Trigger Razorpay payment
+    const razorpayButton = document.querySelector('.razorpay-payment-button');
+    if (razorpayButton) {
+      razorpayButton.click();
+    } else {
+      alert('Payment gateway initialization failed. Please refresh and try again.');
+    }
+  } else if (selectedPayment === 'cod') {
+    // For COD, redirect to order success
+    if (confirm('Confirm Cash on Delivery?')) {
+      window.location.href = "{% url 'orders:order_success' order.id %}?cod=true";
+    }
+  }
+});
+</script>
+
+{% endblock %}

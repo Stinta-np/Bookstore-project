@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.auth-container {
+  max-width: 550px;
+  margin: 3rem auto;
+}
+
+.auth-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+  background: linear-gradient(135deg, #5C3317, #8B4513);
+  color: #F5F5DC;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.auth-icon {
+  font-size: 4rem;
+  color: #DAA520;
+  margin-bottom: 1rem;
+}
+
+.auth-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin: 0;
+  color: #DAA520;
+}
+
+.auth-subtitle {
+  color: #F5E6D3;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.auth-body {
+  padding: 2.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #5C3317;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.form-label i {
+  color: #8B4513;
+  margin-right: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #8B4513;
+  box-shadow: 0 0 0 3px rgba(139,69,19,0.1);
+}
+
+.form-control::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.form-text {
+  font-size: 0.85rem;
+  color: #6B5B4F;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.btn-auth {
+  width: 100%;
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.btn-auth:hover {
+  background: #5C3317;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.auth-footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: #F5F5DC;
+  border-top: 2px solid #D4C4B0;
+}
+
+.auth-footer-text {
+  color: #6B5B4F;
+  margin: 0;
+}
+
+.auth-footer-link {
+  color: #8B4513;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer-link:hover {
+  color: #5C3317;
+  text-decoration: underline;
+}
+
+.error-message {
+  background: #F8D7DA;
+  border: 1px solid #F5C6CB;
+  color: #721C24;
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.password-requirements {
+  background: #F5E6D3;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 3px solid #8B4513;
+  margin-top: 1rem;
+}
+
+.password-requirements h6 {
+  color: #5C3317;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.password-requirements ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #6B5B4F;
+  font-size: 0.85rem;
+}
+
+.password-requirements li {
+  margin-bottom: 0.25rem;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #F5F5DC;
+  border-radius: 5px;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.terms-text {
+  color: #6B5B4F;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.terms-text a {
+  color: #8B4513;
+  font-weight: 600;
+}
+</style>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="auth-icon">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h1 class="auth-title">Join Our Community</h1>
+      <p class="auth-subtitle">Create your account today</p>
+    </div>
+
+    <!-- Body -->
+    <div class="auth-body">
+      <!-- Error Messages -->
+      {% if form.non_field_errors %}
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+
+      <!-- Signup Form -->
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-user"></i> Username
+          </label>
+          {{ form.username }}
+          <small class="form-text">
+            Choose a unique username for your account
+          </small>
+          {% if form.username.errors %}
+            <div class="error-message">
+              {{ form.username.errors }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-envelope"></i> Email Address
+          </label>
+          {{ form.email }}
+          <small class="form-text">
+            We'll never share your email with anyone
+          </small>
+          {% if form.email.errors %}
+            <div class="error-message">
+              {{ form.email.errors }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+            <div class="error-message">
+              {{ form.password1.errors }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-lock"></i> Confirm Password
+          </label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            <div class="error-message">
+              {{ form.password2.errors }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Password Requirements -->
+        <div class="password-requirements">
+          <h6><i class="fas fa-info-circle"></i> Password Requirements:</h6>
+          <ul>
+            <li>At least 8 characters long</li>
+            <li>Mix of letters and numbers</li>
+            <li>Cannot be too common</li>
+          </ul>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-checkbox">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms" class="terms-text">
+            I agree to the <a href="#">Terms of Service</a> and 
+            <a href="#">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-auth">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+      </form>
+
+      <!-- Benefits -->
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #D4C4B0;">
+        <h6 style="color: #5C3317; margin-bottom: 1rem; text-align: center;">
+          Why Join Us?
+        </h6>
+        <div style="display: grid; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; color: #6B5B4F;">
+            <i class="fas fa-check-circle" style="color: #28A745;"></i>
+            <span>Exclusive deals and discounts</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; color: #6B5B4F;">
+            <i class="fas fa-check-circle" style="color: #28A745;"></i>
+            <span>Track your orders easily</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; color: #6B5B4F;">
+            <i class="fas fa-check-circle" style="color: #28A745;"></i>
+            <span>Create wishlists and save favorites</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="auth-footer">
+      <p class="auth-footer-text">
+        Already have an account? 
+        <a href="{% url 'users:login' %}" class="auth-footer-link">
+          Login here
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Back to Home -->
+  <div style="text-align: center; margin-top: 2rem;">
+    <a href="{% url 'books:home' %}" style="color: #8B4513; text-decoration: none;">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+</div>
+
+{% endblock %}

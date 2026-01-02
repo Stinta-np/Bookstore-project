@@ -1,0 +1,704 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Book Detail Styles */
+.breadcrumb-nav {
+  background: #F5E6D3;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.breadcrumb-nav a {
+  color: #8B4513;
+  text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+  color: #5C3317;
+  text-decoration: underline;
+}
+
+.book-detail-container {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.book-image-wrapper {
+  text-align: center;
+  position: relative;
+}
+
+.book-main-image {
+  width: 100%;
+  max-width: 350px;
+  height: 480px;
+  border: 3px solid #D4C4B0;
+  border-radius: 10px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #F5E6D3, #D4C4B0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8rem;
+  color: #8B4513;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.book-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-main-image i {
+  font-size: 8rem;
+  color: #8B4513;
+}
+
+.book-badge-large {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #DC3545;
+  color: #FFF;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.book-detail-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #5C3317;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.book-authors {
+  font-size: 1.3rem;
+  color: #6B5B4F;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.book-rating-large {
+  font-size: 1.2rem;
+  color: #DAA520;
+  margin-bottom: 1.5rem;
+}
+
+.book-price-section {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: #F5E6D3;
+  border-radius: 10px;
+  border-left: 4px solid #8B4513;
+}
+
+.book-price-large {
+  font-size: 2.5rem;
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.book-price-large del {
+  color: #999;
+  font-size: 1.8rem;
+  margin-right: 1rem;
+}
+
+.book-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #2C1810;
+  margin: 1.5rem 0;
+  text-align: justify;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.btn-add-cart {
+  flex: 1;
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add-cart:hover {
+  background: #5C3317;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.btn-wishlist {
+  background: #FFF;
+  color: #DC3545;
+  border: 2px solid #DC3545;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-wishlist:hover {
+  background: #DC3545;
+  color: #FFF;
+}
+
+.btn-wishlist.in-wishlist {
+  background: #DC3545;
+  color: #FFF;
+}
+
+.book-info-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.book-info-header {
+  background: linear-gradient(135deg, #8B4513, #5C3317);
+  color: #F5F5DC;
+  padding: 1rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.book-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.book-info-item {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #F5E6D3;
+  display: flex;
+  justify-content: space-between;
+}
+
+.book-info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #5C3317;
+}
+
+.info-value {
+  color: #6B5B4F;
+}
+
+/* Related Books Section */
+.section-divider {
+  margin: 3rem 0;
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #D4C4B0, transparent);
+}
+
+.section-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #5C3317;
+  margin: 2rem 0 1.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.related-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.related-book-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.related-book-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border-color: #DAA520;
+}
+
+.related-book-image {
+  width: 100%;
+  height: 240px;
+  background: linear-gradient(135deg, #F5E6D3, #D4C4B0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #8B4513;
+  overflow: hidden;
+}
+
+.related-book-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.related-book-image i {
+  font-size: 3rem;
+  color: #8B4513;
+}
+
+.related-book-body {
+  padding: 1rem;
+}
+
+.related-book-title {
+  font-size: 0.95rem;
+  color: #5C3317;
+  margin-bottom: 0.75rem;
+  height: 2.5rem;
+  overflow: hidden;
+}
+
+/* Reviews Section */
+.reviews-section {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 3rem 0;
+}
+
+.average-rating {
+  text-align: center;
+  padding: 2rem;
+  background: #F5E6D3;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+.rating-number {
+  font-size: 3rem;
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.rating-stars-large {
+  font-size: 1.5rem;
+  color: #DAA520;
+  margin: 0.5rem 0;
+}
+
+.review-form {
+  background: #F5F5DC;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin: 2rem 0;
+  border: 2px solid #D4C4B0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #5C3317;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.form-select, .form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #D4C4B0;
+  border-radius: 5px;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.btn-submit-review {
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit-review:hover {
+  background: #5C3317;
+  transform: translateY(-2px);
+}
+
+.review-item {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #F5E6D3;
+}
+
+.review-user {
+  font-weight: 600;
+  color: #5C3317;
+  font-size: 1.1rem;
+}
+
+.review-rating {
+  color: #DAA520;
+}
+
+.review-comment {
+  color: #2C1810;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.review-date {
+  font-size: 0.85rem;
+  color: #999;
+}
+</style>
+
+<!-- Breadcrumb -->
+<nav class="breadcrumb-nav">
+  <a href="{% url 'books:home' %}"><i class="fas fa-home"></i> Home</a> /
+  <a href="{% url 'books:book_list' %}">Books</a> /
+  <span>{{ book.title }}</span>
+</nav>
+
+<!-- Book Detail -->
+<div class="book-detail-container">
+  <div class="row">
+    <!-- LEFT: Book Image -->
+    <div class="col-md-4">
+      <div class="book-image-wrapper">
+        {% if book.discount_percent > 0 %}
+        <span class="book-badge-large">
+          {{ book.discount_percent }}% OFF
+        </span>
+        {% endif %}
+        
+        <div class="book-main-image">
+          {% if book.image %}
+            <img src="{{ book.image.url }}" alt="{{ book.title }}">
+          {% else %}
+            <i class="fas fa-book"></i>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE: Book Details -->
+    <div class="col-md-5">
+      <h1 class="book-detail-title">{{ book.title }}</h1>
+
+      <p class="book-authors">
+        by 
+        {% for a in book.authors.all %}
+          <strong>{{ a.name }}</strong>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+          <strong>Unknown Author</strong>
+        {% endfor %}
+      </p>
+
+      <div class="book-rating-large">
+        {% for i in "12345" %}
+          {% if forloop.counter <= book.rating %}
+            <i class="fas fa-star"></i>
+          {% else %}
+            <i class="far fa-star"></i>
+          {% endif %}
+        {% endfor %}
+        <span style="color: #6B5B4F;">({{ book.rating }} / 5)</span>
+      </div>
+
+      <div class="book-price-section">
+        {% if book.discount_percent > 0 %}
+          <div class="book-price-large">
+            <del>₹{{ book.price }}</del>
+            ₹{{ book.discounted_price }}
+          </div>
+          <p style="color: #DC3545; margin: 0.5rem 0 0 0;">
+            <i class="fas fa-tag"></i> Save ₹{{ book.price|floatformat:2|add:"-"|add:book.discounted_price|floatformat:2 }}
+          </p>
+        {% else %}
+          <div class="book-price-large">₹{{ book.price }}</div>
+        {% endif %}
+      </div>
+
+      <p class="book-description">
+        {{ book.description|linebreaks|default:"No description available for this book." }}
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <form method="post" action="{% url 'books:add_to_cart' book.id %}" style="flex: 1; margin: 0;">
+          {% csrf_token %}
+          <button type="submit" class="btn-add-cart">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+        </form>
+
+        {% if user.is_authenticated %}
+          <form method="post" action="{% url 'wishlist:toggle_wishlist' book.id %}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="btn-wishlist {% if in_wishlist %}in-wishlist{% endif %}">
+              {% if in_wishlist %}
+                <i class="fas fa-heart"></i> In Wishlist
+              {% else %}
+                <i class="far fa-heart"></i> Add to Wishlist
+              {% endif %}
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'users:login' %}" class="btn-wishlist">
+            <i class="far fa-heart"></i> Wishlist
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- RIGHT: Book Info -->
+    <div class="col-md-3">
+      <div class="book-info-card">
+        <div class="book-info-header">
+          <i class="fas fa-info-circle"></i> Book Information
+        </div>
+        <ul class="book-info-list">
+          <li class="book-info-item">
+            <span class="info-label">Language</span>
+            <span class="info-value">{{ book.language|default:"English" }}</span>
+          </li>
+          <li class="book-info-item">
+            <span class="info-label">Published</span>
+            <span class="info-value">{{ book.published_year|default:"N/A" }}</span>
+          </li>
+          <li class="book-info-item">
+            <span class="info-label">Stock</span>
+            <span class="info-value">
+              {% if book.stock > 0 %}
+                <span style="color: #28A745;">{{ book.stock }} available</span>
+              {% else %}
+                <span style="color: #DC3545;">Out of Stock</span>
+              {% endif %}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- RELATED BOOKS -->
+<h3 class="section-heading">
+  <i class="fas fa-book-open"></i> You May Also Like
+</h3>
+
+<div class="related-books-grid">
+  {% for b in related %}
+    <div class="related-book-card">
+      <div class="related-book-image">
+        {% if b.image %}
+          <img src="{{ b.image.url }}" alt="{{ b.title }}">
+        {% else %}
+          <i class="fas fa-book"></i>
+        {% endif %}
+      </div>
+      <div class="related-book-body">
+        <h4 class="related-book-title">{{ b.title|truncatechars:40 }}</h4>
+        <a href="{% url 'books:detail' b.id %}" class="btn btn-outline-primary btn-sm w-100">
+          <i class="fas fa-eye"></i> View
+        </a>
+      </div>
+    </div>
+  {% empty %}
+    <p style="grid-column: 1/-1; text-align: center; color: #999;">No similar books found.</p>
+  {% endfor %}
+</div>
+
+<!-- RECENTLY VIEWED -->
+{% if recently_viewed_books %}
+<hr class="section-divider">
+<h3 class="section-heading">
+  <i class="fas fa-history"></i> Recently Viewed
+</h3>
+
+<div class="related-books-grid">
+  {% for b in recently_viewed_books %}
+    <div class="related-book-card">
+      <div class="related-book-image">
+        {% if b.image %}
+          <img src="{{ b.image.url }}" alt="{{ b.title }}">
+        {% else %}
+          <i class="fas fa-book"></i>
+        {% endif %}
+      </div>
+      <div class="related-book-body">
+        <h4 class="related-book-title">{{ b.title|truncatechars:40 }}</h4>
+        <a href="{% url 'books:detail' b.id %}" class="btn btn-outline-secondary btn-sm w-100">
+          <i class="fas fa-eye"></i> View
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<hr class="section-divider">
+
+<!-- REVIEWS SECTION -->
+<div class="reviews-section">
+  <h3 class="section-heading">
+    <i class="fas fa-star"></i> Ratings & Reviews
+  </h3>
+
+  <div class="average-rating">
+    <div class="rating-number">{{ book.average_rating|floatformat:1|default:"0.0" }}</div>
+    <div class="rating-stars-large">
+      {% for i in "12345" %}
+        {% if forloop.counter <= book.average_rating %}
+          <i class="fas fa-star"></i>
+        {% else %}
+          <i class="far fa-star"></i>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p style="color: #6B5B4F; margin-top: 0.5rem;">Based on {{ reviews|length }} review{{ reviews|length|pluralize }}</p>
+  </div>
+
+  <!-- Review Form -->
+  {% if user.is_authenticated %}
+  <div class="review-form">
+    <h4 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1rem;">
+      <i class="fas fa-pen"></i> Write Your Review
+    </h4>
+    
+    <form method="post" action="{% url 'reviews:add_review' book.id %}">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label">Rating</label>
+        <select name="rating" class="form-select" required>
+          <option value="">Select rating...</option>
+          <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+          <option value="4">⭐⭐⭐⭐ Very Good</option>
+          <option value="3">⭐⭐⭐ Good</option>
+          <option value="2">⭐⭐ Fair</option>
+          <option value="1">⭐ Poor</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Your Review</label>
+        <textarea 
+          name="comment" 
+          class="form-textarea"
+          placeholder="Share your thoughts about this book..."
+          required></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit-review">
+        <i class="fas fa-paper-plane"></i> Submit Review
+      </button>
+    </form>
+  </div>
+  {% else %}
+  <div style="text-align: center; padding: 2rem; background: #F5F5DC; border-radius: 8px;">
+    <p style="font-size: 1.1rem; color: #6B5B4F; margin-bottom: 1rem;">
+      Please <a href="{% url 'users:login' %}" style="color: #8B4513; font-weight: 600;">login</a> to write a review
+    </p>
+  </div>
+  {% endif %}
+
+  <hr style="margin: 2rem 0; border-color: #D4C4B0;">
+
+  <!-- Reviews List -->
+  <h4 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1.5rem;">
+    <i class="fas fa-comments"></i> Customer Reviews
+  </h4>
+
+  {% for review in reviews %}
+    <div class="review-item">
+      <div class="review-header">
+        <div>
+          <div class="review-user">
+            <i class="fas fa-user-circle"></i> {{ review.user.username }}
+          </div>
+          <div class="review-rating">
+            {% for i in "12345" %}
+              {% if forloop.counter <= review.rating %}
+                <i class="fas fa-star"></i>
+              {% else %}
+                <i class="far fa-star"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="review-date">
+          <i class="far fa-clock"></i> {{ review.created_at|date:"d M Y" }}
+        </div>
+      </div>
+      <p class="review-comment">{{ review.comment }}</p>
+    </div>
+  {% empty %}
+    <div style="text-align: center; padding: 3rem; color: #999;">
+      <i class="far fa-comment" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+      <p style="font-size: 1.1rem;">No reviews yet. Be the first to review this book!</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
+

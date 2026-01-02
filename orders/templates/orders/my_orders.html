@@ -1,0 +1,469 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.orders-header {
+  background: linear-gradient(135deg, #5C3317, #8B4513);
+  color: #F5F5DC;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.orders-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin: 0;
+  color: #DAA520;
+}
+
+.order-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  border-color: #DAA520;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #F5E6D3;
+}
+
+.order-id {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #5C3317;
+}
+
+.order-date {
+  color: #6B5B4F;
+  font-size: 0.95rem;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: #FFF3CD;
+  color: #856404;
+  border: 2px solid #FFE69C;
+}
+
+.status-processing {
+  background: #D1ECF1;
+  color: #0C5460;
+  border: 2px solid #BEE5EB;
+}
+
+.status-shipped {
+  background: #D4EDDA;
+  color: #155724;
+  border: 2px solid #C3E6CB;
+}
+
+.status-delivered {
+  background: #D4EDDA;
+  color: #155724;
+  border: 2px solid #C3E6CB;
+}
+
+.status-cancelled {
+  background: #F8D7DA;
+  color: #721C24;
+  border: 2px solid #F5C6CB;
+}
+
+.order-items {
+  margin-bottom: 1.5rem;
+}
+
+.order-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: #F5F5DC;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.order-item-image {
+  width: 80px;
+  height: 110px;
+  background: linear-gradient(135deg, #F5E6D3, #D4C4B0);
+  border: 2px solid #D4C4B0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #8B4513;
+  flex-shrink: 0;
+}
+
+.order-item-details {
+  flex: 1;
+}
+
+.order-item-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #5C3317;
+  margin-bottom: 0.3rem;
+}
+
+.order-item-meta {
+  color: #6B5B4F;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.order-item-price {
+  font-weight: 700;
+  color: #8B4513;
+  font-size: 1.1rem;
+}
+
+.order-summary {
+  background: #F5E6D3;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.summary-label {
+  color: #6B5B4F;
+}
+
+.summary-value {
+  color: #5C3317;
+  font-weight: 600;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 2px solid #D4C4B0;
+}
+
+.total-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: #5C3317;
+  font-weight: 700;
+}
+
+.total-value {
+  font-size: 1.8rem;
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.order-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-order-action {
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-order-action:hover {
+  background: #5C3317;
+  color: #FFF;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #6C757D;
+}
+
+.btn-secondary:hover {
+  background: #545B62;
+}
+
+.btn-success {
+  background: #28A745;
+}
+
+.btn-success:hover {
+  background: #218838;
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+}
+
+.empty-orders-icon {
+  font-size: 6rem;
+  color: #D4C4B0;
+  margin-bottom: 1.5rem;
+}
+
+.empty-orders-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #5C3317;
+  margin-bottom: 1rem;
+}
+
+.empty-orders-text {
+  font-size: 1.2rem;
+  color: #6B5B4F;
+  margin-bottom: 2rem;
+}
+
+.tracking-info {
+  background: #E7F3FF;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #0066CC;
+  margin-top: 1rem;
+}
+
+.tracking-info strong {
+  color: #0066CC;
+}
+
+.payment-status {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 1rem;
+}
+
+.payment-paid {
+  background: #D4EDDA;
+  color: #155724;
+}
+
+.payment-pending {
+  background: #FFF3CD;
+  color: #856404;
+}
+</style>
+
+<div class="orders-header">
+  <h1 class="orders-title">
+    <i class="fas fa-box"></i> My Orders
+  </h1>
+  <p style="color: #F5E6D3; margin: 0.5rem 0 0 0; font-style: italic;">
+    Track and manage all your orders
+  </p>
+</div>
+
+{% if orders %}
+
+{% for order in orders %}
+<div class="order-card">
+  <!-- Order Header -->
+  <div class="order-header">
+    <div>
+      <h3 class="order-id">
+        <i class="fas fa-receipt"></i> Order #{{ order.id }}
+      </h3>
+      <p class="order-date">
+        <i class="far fa-calendar"></i> 
+        Placed on {{ order.created_at|date:"d M Y, h:i A" }}
+      </p>
+    </div>
+    
+    <div style="text-align: right;">
+      <span class="order-status status-{{ order.status|lower }}">
+        {% if order.status == "PENDING" %}
+          <i class="fas fa-clock"></i> Pending
+        {% elif order.status == "PROCESSING" or order.status == "PACKED" %}
+          <i class="fas fa-box"></i> Processing
+        {% elif order.status == "SHIPPED" or order.status == "OUT" %}
+          <i class="fas fa-shipping-fast"></i> Shipped
+        {% elif order.status == "DELIVERED" %}
+          <i class="fas fa-check-circle"></i> Delivered
+        {% elif order.status == "CANCELLED" %}
+          <i class="fas fa-times-circle"></i> Cancelled
+        {% else %}
+          {{ order.status }}
+        {% endif %}
+      </span>
+      
+      <span class="payment-status {% if order.paid %}payment-paid{% else %}payment-pending{% endif %}">
+        {% if order.paid %}
+          <i class="fas fa-check"></i> Paid
+        {% else %}
+          <i class="fas fa-clock"></i> Payment Pending
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  <!-- Order Items -->
+  <div class="order-items">
+    <h5 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1rem;">
+      <i class="fas fa-list"></i> Order Items
+    </h5>
+    
+    {% for item in order.items.all %}
+    <div class="order-item">
+      <div class="order-item-image">
+                <!-- For any book image display -->
+        {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}">
+        {% else %}
+        <i class="fas fa-book"></i>
+        {% endif %}
+        
+      </div>
+      <div class="order-item-details">
+        <h4 class="order-item-title">{{ item.book.title }}</h4>
+        <p class="order-item-meta">
+          Quantity: {{ item.quantity }} × ₹{{ item.price }}
+        </p>
+        <p class="order-item-price">Subtotal: ₹{{ item.subtotal }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Order Summary -->
+  <div class="order-summary">
+    <div class="summary-row">
+      <span class="summary-label">Subtotal</span>
+      <span class="summary-value">
+        ₹{{ order.total_amount|add:order.discount_amount|default:order.total_amount }}
+      </span>
+    </div>
+    
+    {% if order.discount_amount %}
+    <div class="summary-row" style="color: #28A745;">
+      <span class="summary-label">
+        <i class="fas fa-tag"></i> Discount
+      </span>
+      <span class="summary-value">-₹{{ order.discount_amount }}</span>
+    </div>
+    {% endif %}
+    
+    <div class="summary-row">
+      <span class="summary-label">Shipping</span>
+      <span class="summary-value">
+        {% if order.total_amount >= 500 %}
+          <span style="color: #28A745;">FREE</span>
+        {% else %}
+          ₹40
+        {% endif %}
+      </span>
+    </div>
+    
+    <div class="order-total">
+      <span class="total-label">Total Amount</span>
+      <span class="total-value">₹{{ order.total_amount }}</span>
+    </div>
+  </div>
+
+  <!-- Tracking Info (if shipped) -->
+  {% if order.status == "SHIPPED" or order.status == "OUT" %}
+  <div class="tracking-info">
+    <i class="fas fa-truck"></i>
+    <strong>Tracking:</strong> Your order is on the way! 
+    Expected delivery in 2-3 business days.
+  </div>
+  {% endif %}
+
+  <!-- Order Actions -->
+  <div class="order-actions">
+    <a href="{% url 'orders:order_detail' order.id %}" class="btn-order-action">
+      <i class="fas fa-eye"></i> View Details
+    </a>
+    
+    {% if order.status == "DELIVERED" %}
+    <a href="{% url 'orders:download_invoice' order.id %}" class="btn-order-action btn-success">
+      <i class="fas fa-download"></i> Download Invoice
+    </a>
+    {% endif %}
+    
+    {% if order.status == "PENDING" or order.status == "PROCESSING" %}
+    <button class="btn-order-action btn-secondary" onclick="alert('Cancel order functionality')">
+      <i class="fas fa-times"></i> Cancel Order
+    </button>
+    {% endif %}
+    
+    {% if order.status == "DELIVERED" %}
+    <a href="#" class="btn-order-action btn-secondary">
+      <i class="fas fa-redo"></i> Reorder
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+{% else %}
+<!-- Empty Orders -->
+<div class="empty-orders">
+  <div class="empty-orders-icon">
+    <i class="fas fa-box-open"></i>
+  </div>
+  <h2 class="empty-orders-title">No Orders Yet</h2>
+  <p class="empty-orders-text">
+    You haven't placed any orders yet. Start shopping now!
+  </p>
+  <a href="{% url 'books:book_list' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+    <i class="fas fa-shopping-cart"></i> Start Shopping
+  </a>
+</div>
+{% endif %}
+
+<!-- Help Section -->
+<div style="background: #F5E6D3; padding: 2rem; border-radius: 10px; margin-top: 3rem; text-align: center;">
+  <h4 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1rem;">
+    <i class="fas fa-question-circle"></i> Need Help?
+  </h4>
+  <p style="color: #6B5B4F; margin: 0 0 1rem 0;">
+    Have questions about your order? We're here to help!
+  </p>
+  <a href="#" style="color: #8B4513; font-weight: 600; text-decoration: none;">
+    <i class="fas fa-headset"></i> Contact Support
+  </a>
+</div>
+
+{% endblock %}

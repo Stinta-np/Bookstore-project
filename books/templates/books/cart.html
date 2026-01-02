@@ -1,0 +1,531 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+.cart-header {
+  background: linear-gradient(135deg, #5C3317, #8B4513);
+  color: #F5F5DC;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cart-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin: 0;
+  color: #DAA520;
+}
+
+.cart-container {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+}
+
+@media (max-width: 992px) {
+  .cart-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cart-items-section {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.cart-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 2px solid #F5E6D3;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+  border-color: #DAA520;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.cart-item-image {
+  width: 120px;
+  height: 160px;
+  background: linear-gradient(135deg, #F5E6D3, #D4C4B0);
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #8B4513;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.cart-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: #5C3317;
+  margin-bottom: 0.5rem;
+}
+
+.cart-item-author {
+  color: #6B5B4F;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.cart-item-price {
+  font-size: 1.5rem;
+  color: #8B4513;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.qty-btn {
+  width: 35px;
+  height: 35px;
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.qty-btn:hover {
+  background: #5C3317;
+  transform: scale(1.1);
+}
+
+.qty-display {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #5C3317;
+  min-width: 40px;
+  text-align: center;
+}
+
+.btn-remove {
+  background: #DC3545;
+  color: #FFF;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-remove:hover {
+  background: #C82333;
+  transform: translateY(-2px);
+}
+
+.cart-summary {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.summary-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #5C3317;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid #F5E6D3;
+}
+
+.summary-label {
+  color: #6B5B4F;
+  font-size: 1.1rem;
+}
+
+.summary-value {
+  color: #5C3317;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  margin-top: 1rem;
+  border-top: 2px solid #8B4513;
+}
+
+.total-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #5C3317;
+  font-weight: 700;
+}
+
+.total-value {
+  font-size: 2rem;
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.coupon-section {
+  background: #F5E6D3;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.coupon-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.coupon-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #D4C4B0;
+  border-radius: 5px;
+  font-family: 'Lora', serif;
+}
+
+.btn-apply-coupon {
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-apply-coupon:hover {
+  background: #5C3317;
+}
+
+.coupon-applied {
+  background: #D4EDDA;
+  border: 2px solid #28A745;
+  padding: 1rem;
+  border-radius: 5px;
+  color: #155724;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-checkout {
+  width: 100%;
+  background: #DAA520;
+  color: #2C1810;
+  border: none;
+  padding: 1.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+}
+
+.btn-checkout:hover {
+  background: #FFD700;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(218,165,32,0.4);
+}
+
+.btn-continue {
+  width: 100%;
+  background: transparent;
+  color: #8B4513;
+  border: 2px solid #8B4513;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.btn-continue:hover {
+  background: #8B4513;
+  color: #FFF;
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+}
+
+.empty-cart-icon {
+  font-size: 6rem;
+  color: #D4C4B0;
+  margin-bottom: 1.5rem;
+}
+
+.empty-cart-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #5C3317;
+  margin-bottom: 1rem;
+}
+
+.empty-cart-text {
+  font-size: 1.2rem;
+  color: #6B5B4F;
+  margin-bottom: 2rem;
+}
+
+.discount-badge {
+  background: #28A745;
+  color: #FFF;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+</style>
+
+<div class="cart-header">
+  <h1 class="cart-title">
+    <i class="fas fa-shopping-cart"></i> Your Shopping Cart
+  </h1>
+</div>
+
+{% if cart_items %}
+<div class="cart-container">
+  <!-- Cart Items -->
+  <div class="cart-items-section">
+    <h3 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1.5rem;">
+      <i class="fas fa-list"></i> Cart Items ({{ cart_items|length }})
+    </h3>
+
+  {% for item in cart_items %}
+<div class="cart-item">
+  <!-- IMAGE SECTION - THIS IS THE ONLY cart-item-image div you need -->
+  <div class="cart-item-image">
+    {% if item.book.image %}
+      <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}">
+    {% else %}
+      <i class="fas fa-book"></i>
+    {% endif %}
+  </div>
+  
+  <div class="cart-item-details">
+    <h4 class="cart-item-title">{{ item.book.title }}</h4>
+    <p class="cart-item-author">
+      by {% for author in item.book.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% empty %}Unknown Author{% endfor %}
+    </p>
+
+    <!-- REMOVE THIS DUPLICATE IMAGE DIV IF IT EXISTS IN YOUR CODE -->
+    <!-- DELETE ANY EXTRA cart-item-image div here -->
+
+    <div class="cart-item-price">
+      {% if item.book.discount_percent > 0 %}
+        <del style="color: #999; font-size: 1.1rem;">₹{{ item.book.price }}</del>
+        ₹{{ item.book.discounted_price|floatformat:2 }}
+        <span class="discount-badge">{{ item.book.discount_percent }}% OFF</span>
+      {% else %}
+        ₹{{ item.book.price }}
+      {% endif %}
+    </div>
+    
+    <div class="quantity-controls">
+      <span style="color: #6B5B4F; font-weight: 600;">Quantity:</span>
+
+      <form method="post" action="{% url 'books:decrease_quantity' item.book.id %}" style="display: inline; margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="qty-btn">
+          <i class="fas fa-minus"></i>
+        </button>
+      </form>
+
+      <span class="qty-display">{{ item.qty }}</span>
+
+      <form method="post" action="{% url 'books:increase_quantity' item.book.id %}" style="display: inline; margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="qty-btn">
+          <i class="fas fa-plus"></i>
+        </button>
+      </form>
+    </div>
+    
+    <div>
+      <strong style="color: #5C3317;">Subtotal:</strong>
+      <span style="color: #8B4513; font-size: 1.3rem; font-weight: 700;">
+        ₹{{ item.subtotal|floatformat:2 }}
+      </span>
+    </div>
+    
+    <div style="margin-top: 1rem;">
+      <form method="post" action="{% url 'books:remove_from_cart' item.book.id %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-remove">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+  </div>
+
+  <!-- Cart Summary -->
+  <div class="cart-summary">
+    <h3 class="summary-title">
+      <i class="fas fa-calculator"></i> Order Summary
+    </h3>
+
+    <div class="summary-row">
+      <span class="summary-label">Subtotal</span>
+      <span class="summary-value">₹{{ subtotal|floatformat:2 }}</span>
+    </div>
+
+    {% if coupon %}
+    <div class="summary-row" style="color: #28A745;">
+      <span class="summary-label">
+        <i class="fas fa-tag"></i> Discount ({{ coupon.code }})
+      </span>
+      <span class="summary-value">-₹{{ discount|floatformat:2 }}</span>
+    </div>
+    {% endif %}
+
+    <div class="summary-row">
+      <span class="summary-label">Shipping</span>
+      <span class="summary-value" style="color: #28A745;">
+        {% if total >= 500 %}
+          FREE
+        {% else %}
+          ₹40
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="summary-total">
+      <span class="total-label">Total</span>
+      <span class="total-value">₹{{ total|floatformat:2 }}</span>
+    </div>
+
+    <!-- Coupon Section -->
+    <div class="coupon-section">
+      <h4 style="color: #5C3317; margin-bottom: 1rem; font-size: 1.1rem;">
+        <i class="fas fa-ticket-alt"></i> Have a Coupon?
+      </h4>
+      
+      {% if not coupon %}
+      <form method="post" action="{% url 'books:apply_coupon' %}" class="coupon-form">
+        {% csrf_token %}
+        <input type="text" 
+               name="coupon" 
+               class="coupon-input" 
+               placeholder="Enter coupon code"
+               required>
+        <button type="submit" class="btn-apply-coupon">
+          <i class="fas fa-check"></i> Apply
+        </button>
+      </form>
+      {% else %}
+      <div class="coupon-applied">
+        <span>
+          <i class="fas fa-check-circle"></i>
+          <strong>{{ coupon.code }}</strong> applied ({{ coupon.discount_percent }}% off)
+        </span>
+        <form method="post" action="{% url 'books:apply_coupon' %}" style="display: inline; margin: 0;">
+          {% csrf_token %}
+          <input type="hidden" name="coupon" value="">
+          <button type="submit" style="background: transparent; border: none; color: #DC3545; cursor: pointer; font-size: 1.2rem;">
+            <i class="fas fa-times"></i>
+          </button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Checkout Button -->
+    {% if user.is_authenticated %}
+      <a href="{% url 'orders:checkout' %}" class="btn-checkout" style="text-decoration: none;">
+        <i class="fas fa-lock"></i> Proceed to Checkout
+      </a>
+    {% else %}
+      <a href="{% url 'users:login' %}" class="btn-checkout" style="text-decoration: none;">
+        <i class="fas fa-sign-in-alt"></i> Login to Checkout
+      </a>
+    {% endif %}
+
+    <a href="{% url 'books:book_list' %}" class="btn-continue">
+      <i class="fas fa-arrow-left"></i> Continue Shopping
+    </a>
+
+    <!-- Security Badge -->
+    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #F5E6D3;">
+      <p style="color: #6B5B4F; font-size: 0.9rem;">
+        <i class="fas fa-shield-alt" style="color: #28A745;"></i>
+        Secure Checkout
+      </p>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<!-- Empty Cart -->
+<div class="empty-cart">
+  <div class="empty-cart-icon">
+    <i class="fas fa-shopping-cart"></i>
+  </div>
+  <h2 class="empty-cart-title">Your Cart is Empty</h2>
+  <p class="empty-cart-text">Looks like you haven't added any books yet.</p>
+  <a href="{% url 'books:book_list' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+    <i class="fas fa-book"></i> Browse Books
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.review-container {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.review-header {
+  background: linear-gradient(135deg, #5C3317, #8B4513);
+  color: #F5F5DC;
+  padding: 2.5rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.review-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin: 0 0 0.5rem 0;
+  color: #DAA520;
+}
+
+.review-subtitle {
+  color: #F5E6D3;
+  font-size: 1.05rem;
+}
+
+.book-info-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.book-image {
+  width: 120px;
+  height: 160px;
+  background: linear-gradient(135deg, #F5E6D3, #D4C4B0);
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #8B4513;
+  flex-shrink: 0;
+}
+
+.book-details h3 {
+  font-family: 'Playfair Display', serif;
+  color: #5C3317;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.book-details p {
+  color: #6B5B4F;
+  margin: 0;
+}
+
+.review-form-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 15px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #5C3317;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #5C3317;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.form-label i {
+  color: #8B4513;
+  margin-right: 0.5rem;
+}
+
+.rating-input {
+  display: flex;
+  gap: 0.75rem;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  font-size: 2.5rem;
+}
+
+.rating-input input[type="radio"] {
+  display: none;
+}
+
+.rating-input label {
+  cursor: pointer;
+  color: #D4C4B0;
+  transition: all 0.3s ease;
+}
+
+.rating-input label:hover,
+.rating-input label:hover ~ label,
+.rating-input input[type="radio"]:checked ~ label {
+  color: #DAA520;
+  transform: scale(1.1);
+}
+
+.rating-description {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #F5E6D3;
+  border-radius: 5px;
+  color: #6B5B4F;
+  text-align: center;
+  font-style: italic;
+  min-height: 50px;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 1.25rem;
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #8B4513;
+  box-shadow: 0 0 0 3px rgba(139,69,19,0.1);
+}
+
+.form-textarea::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.character-count {
+  text-align: right;
+  color: #6B5B4F;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.review-tips {
+  background: #E7F3FF;
+  border-left: 4px solid #0066CC;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.review-tips h4 {
+  color: #0066CC;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.review-tips ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #6B5B4F;
+}
+
+.review-tips li {
+  margin-bottom: 0.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-submit {
+  flex: 1;
+  min-width: 200px;
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 1.25rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: #5C3317;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.btn-cancel {
+  flex: 1;
+  min-width: 200px;
+  background: transparent;
+  color: #8B4513;
+  border: 2px solid #8B4513;
+  padding: 1.25rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn-cancel:hover {
+  background: #8B4513;
+  color: #FFF;
+}
+
+.error-message {
+  background: #F8D7DA;
+  border: 1px solid #F5C6CB;
+  color: #721C24;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1.5rem;
+}
+</style>
+
+<div class="review-container">
+  <!-- Review Header -->
+  <div class="review-header">
+    <h1 class="review-title">
+      <i class="fas fa-star"></i> Write a Review
+    </h1>
+    <p class="review-subtitle">Share your thoughts about this book</p>
+  </div>
+
+  <!-- Book Info -->
+  <div class="book-info-card">
+    <div class="book-image">
+      <i class="fas fa-book"></i>
+    </div>
+    <div class="book-details">
+      <h3>{{ book.title }}</h3>
+      <p><strong>Author:</strong> {{ book.author|default:"Unknown Author" }}</p>
+      <p><strong>Price:</strong> ₹{{ book.price }}</p>
+    </div>
+  </div>
+
+  <!-- Review Form -->
+  <div class="review-form-card">
+    <h2 class="form-section-title">
+      <i class="fas fa-pen"></i> Your Review
+    </h2>
+
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="error-message">
+      <i class="fas fa-exclamation-circle"></i>
+      <strong>Please correct the following errors:</strong>
+      <ul style="margin: 0.5rem 0 0 1.5rem;">
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Rating -->
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-star"></i> Your Rating
+        </label>
+        <div class="rating-input">
+          <input type="radio" name="rating" id="star5" value="5" required>
+          <label for="star5" title="Excellent">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" id="star4" value="4">
+          <label for="star4" title="Very Good">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" id="star3" value="3">
+          <label for="star3" title="Good">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" id="star2" value="2">
+          <label for="star2" title="Fair">
+            <i class="fas fa-star"></i>
+          </label>
+
+          <input type="radio" name="rating" id="star1" value="1">
+          <label for="star1" title="Poor">
+            <i class="fas fa-star"></i>
+          </label>
+        </div>
+        <div id="rating-description" class="rating-description">
+          Select stars to rate this book
+        </div>
+      </div>
+
+      <!-- Review Comment -->
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-comment"></i> Your Review
+        </label>
+        <textarea 
+          name="comment" 
+          id="review-comment"
+          class="form-textarea"
+          placeholder="What did you think about this book? Share your experience, favorite moments, or why you'd recommend it to others..."
+          required
+          maxlength="1000"></textarea>
+        <div class="character-count">
+          <span id="char-count">0</span> / 1000 characters
+        </div>
+      </div>
+
+      <!-- Review Tips -->
+      <div class="review-tips">
+        <h4><i class="fas fa-lightbulb"></i> Tips for Writing a Great Review:</h4>
+        <ul>
+          <li>Be specific about what you liked or didn't like</li>
+          <li>Mention any memorable characters, plot points, or themes</li>
+          <li>Keep it relevant - focus on the book, not the delivery or packaging</li>
+          <li>Be honest and constructive in your feedback</li>
+          <li>Help other readers decide if this book is right for them</li>
+        </ul>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-paper-plane"></i> Submit Review
+        </button>
+        <a href="{% url 'books:detail' book.id %}" class="btn-cancel">
+          <i class="fas fa-times"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Guidelines -->
+  <div style="background: #F5E6D3; padding: 1.5rem; border-radius: 10px; text-align: center;">
+    <p style="color: #6B5B4F; margin: 0; font-size: 0.95rem;">
+      <i class="fas fa-info-circle"></i>
+      Reviews help other readers discover great books. Your honest feedback is valuable!
+    </p>
+  </div>
+</div>
+
+<script>
+// Rating descriptions
+const ratingDescriptions = {
+  1: "⭐ Poor - Not recommended",
+  2: "⭐⭐ Fair - Below expectations",
+  3: "⭐⭐⭐ Good - Worth reading",
+  4: "⭐⭐⭐⭐ Very Good - Highly recommended",
+  5: "⭐⭐⭐⭐⭐ Excellent - Must read!"
+};
+
+// Update rating description
+document.querySelectorAll('.rating-input input').forEach(input => {
+  input.addEventListener('change', function() {
+    document.getElementById('rating-description').textContent = ratingDescriptions[this.value];
+  });
+});
+
+// Character count
+const textarea = document.getElementById('review-comment');
+const charCount = document.getElementById('char-count');
+
+textarea.addEventListener('input', function() {
+  charCount.textContent = this.value.length;
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+  const rating = document.querySelector('.rating-input input:checked');
+  const comment = textarea.value.trim();
+
+  if (!rating) {
+    e.preventDefault();
+    alert('Please select a rating');
+    return;
+  }
+
+  if (comment.length < 10) {
+    e.preventDefault();
+    alert('Please write at least 10 characters in your review');
+    return;
+  }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,517 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, rgba(92,51,23,0.95), rgba(139,69,19,0.9)), 
+              url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200') center/cover;
+  color: #F5F5DC;
+  padding: 5rem 2rem;
+  border-radius: 15px;
+  margin-bottom: 3rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #DAA520;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+  color: #F5E6D3;
+}
+
+.hero-btn {
+  background: #DAA520;
+  color: #2C1810;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(218,165,32,0.4);
+}
+
+.hero-btn:hover {
+  background: #FFD700;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(218,165,32,0.6);
+  color: #2C1810;
+}
+
+/* Section Titles */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #5C3317;
+  margin: 3rem 0 2rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.section-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #DAA520, transparent);
+}
+
+/* Feature Cards */
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.feature-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-color: #DAA520;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #8B4513;
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #5C3317;
+  margin-bottom: 0.5rem;
+}
+
+.feature-text {
+  color: #6B5B4F;
+  line-height: 1.6;
+}
+
+/* Book Cards */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.book-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.book-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  border-color: #DAA520;
+}
+
+.book-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #F5E6D3, #D4C4B0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: #8B4513;
+  overflow: hidden;
+}
+
+.book-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-image i {
+  font-size: 4rem;
+  color: #8B4513;
+}
+
+.book-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #DAA520;
+  color: #2C1810;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.book-body {
+  padding: 1.25rem;
+}
+
+.book-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #5C3317;
+  margin-bottom: 0.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.book-author {
+  color: #6B5B4F;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+.book-price {
+  font-size: 1.3rem;
+  color: #8B4513;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.book-rating {
+  color: #DAA520;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Categories */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.category-card {
+  background: linear-gradient(135deg, #8B4513, #5C3317);
+  color: #F5F5DC;
+  padding: 2rem 1rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid #D4C4B0;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #DAA520, #8B4513);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.category-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.category-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Testimonials */
+.testimonial-section {
+  background: #FFF;
+  padding: 3rem 2rem;
+  border-radius: 15px;
+  border: 2px solid #D4C4B0;
+  margin: 3rem 0;
+}
+
+.testimonial {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.testimonial-text {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #5C3317;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.testimonial-author {
+  color: #8B4513;
+  font-weight: 600;
+}
+
+.quote-icon {
+  font-size: 3rem;
+  color: #DAA520;
+  opacity: 0.3;
+}
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+  <h1 class="hero-title">
+    <i class="fas fa-book-open"></i>
+    Welcome to Classic Bookstore
+  </h1>
+  <p class="hero-subtitle">"A room without books is like a body without a soul"</p>
+  <a href="{% url 'books:book_list' %}" class="hero-btn">
+    <i class="fas fa-compass"></i> Explore Our Collection
+  </a>
+</div>
+
+<!-- Features -->
+<div class="feature-cards">
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-shipping-fast"></i></div>
+    <h3 class="feature-title">Free Shipping</h3>
+    <p class="feature-text">On orders above ₹500</p>
+  </div>
+  
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-undo"></i></div>
+    <h3 class="feature-title">Easy Returns</h3>
+    <p class="feature-text">30-day return policy</p>
+  </div>
+  
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+    <h3 class="feature-title">Secure Payment</h3>
+    <p class="feature-text">100% secure transactions</p>
+  </div>
+  
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+    <h3 class="feature-title">24/7 Support</h3>
+    <p class="feature-text">Always here to help</p>
+  </div>
+</div>
+
+<!-- Featured Books -->
+<h2 class="section-title">
+  <i class="fas fa-star"></i> Featured Books
+</h2>
+
+<div class="book-grid">
+  {% for book in featured_books|slice:":8" %}
+  <div class="book-card">
+    {% if book.discount_percent > 0 %}
+      <span class="book-badge">{{ book.discount_percent }}% OFF</span>
+    {% endif %}
+    
+    <div class="book-image">
+      {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}">
+      {% else %}
+        <i class="fas fa-book"></i>
+      {% endif %}
+    </div>
+    
+    <div class="book-body">
+      <h3 class="book-title">{{ book.title }}</h3>
+      <p class="book-author">by {{ book.author|default:"Unknown Author" }}</p>
+      
+      <div class="book-rating">
+        {% for i in "12345" %}
+          {% if forloop.counter <= book.rating %}
+            <i class="fas fa-star"></i>
+          {% else %}
+            <i class="far fa-star"></i>
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+      <div class="book-price">
+        {% if book.discount_percent > 0 %}
+          <del style="color:#999; font-size:1rem;">₹{{ book.price }}</del>
+          ₹{{ book.discounted_price }}
+        {% else %}
+          ₹{{ book.price }}
+        {% endif %}
+      </div>
+      
+      <a href="{% url 'books:detail' book.id %}" class="btn btn-primary w-100">
+        <i class="fas fa-eye"></i> View Details
+      </a>
+    </div>
+  </div>
+  {% empty %}
+  <!-- Placeholder cards if no books -->
+  {% for i in "12345678" %}
+  <div class="book-card">
+    <div class="book-image">
+      {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}">
+      {% else %}
+        <i class="fas fa-book"></i>
+      {% endif %}
+    </div>
+    
+    <div class="book-body">
+      <h3 class="book-title">Sample Book {{ forloop.counter }}</h3>
+      <p class="book-author">by Author Name</p>
+      <div class="book-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="far fa-star"></i>
+      </div>
+      <div class="book-price">₹499</div>
+      <a href="#" class="btn btn-primary w-100">
+        <i class="fas fa-eye"></i> View Details
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+  {% endfor %}
+</div>
+
+<!-- Categories -->
+<h2 class="section-title">
+  <i class="fas fa-th-large"></i> Browse by Category
+</h2>
+
+<div class="categories-grid">
+  <div class="category-card">
+    <div class="category-icon"><i class="fas fa-magic"></i></div>
+    <div class="category-name">Fiction</div>
+  </div>
+  
+  <div class="category-card">
+    <div class="category-icon"><i class="fas fa-heart"></i></div>
+    <div class="category-name">Romance</div>
+  </div>
+  
+  <div class="category-card">
+    <div class="category-icon"><i class="fas fa-search"></i></div>
+    <div class="category-name">Mystery</div>
+  </div>
+  
+  <div class="category-card">
+    <div class="category-icon"><i class="fas fa-dragon"></i></div>
+    <div class="category-name">Fantasy</div>
+  </div>
+  
+  <div class="category-card">
+    <div class="category-icon"><i class="fas fa-user-graduate"></i></div>
+    <div class="category-name">Self-Help</div>
+  </div>
+  
+  <div class="category-card">
+    <div class="category-icon"><i class="fas fa-user"></i></div>
+    <div class="category-name">Biography</div>
+  </div>
+</div>
+
+<!-- Best Sellers -->
+<h2 class="section-title">
+  <i class="fas fa-fire"></i> Best Sellers
+</h2>
+
+<div class="book-grid">
+  {% for book in best_sellers|slice:":4" %}
+  <div class="book-card">
+    <span class="book-badge">Best Seller</span>
+    <div class="book-image">
+      {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}">
+      {% else %}
+        <i class="fas fa-book"></i>
+      {% endif %}
+    </div>
+    
+    <div class="book-body">
+      <h3 class="book-title">{{ book.title }}</h3>
+      <p class="book-author">by {{ book.author|default:"Unknown Author" }}</p>
+      <div class="book-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="book-price">₹{{ book.price }}</div>
+      <a href="{% url 'books:detail' book.id %}" class="btn btn-primary w-100">
+        <i class="fas fa-eye"></i> View Details
+      </a>
+    </div>
+  </div>
+  {% empty %}
+  <!-- Placeholder -->
+  {% for i in "1234" %}
+  <div class="book-card">
+    <span class="book-badge">Best Seller</span>
+    <div class="book-image">
+      {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}">
+      {% else %}
+        <i class="fas fa-book"></i>
+      {% endif %}
+    </div>
+    
+    <div class="book-body">
+      <h3 class="book-title">Bestselling Book {{ forloop.counter }}</h3>
+      <p class="book-author">by Top Author</p>
+      <div class="book-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="book-price">₹599</div>
+      <a href="#" class="btn btn-primary w-100">
+        <i class="fas fa-eye"></i> View Details
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+  {% endfor %}
+</div>
+
+<!-- Testimonial -->
+<div class="testimonial-section">
+  <div class="testimonial">
+    <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+    <p class="testimonial-text">
+      "Classic Bookstore has been my go-to place for finding rare and wonderful books. 
+      Their collection is amazing and the service is exceptional!"
+    </p>
+    <p class="testimonial-author">- A Happy Reader</p>
+  </div>
+</div>
+
+{% endblock %}

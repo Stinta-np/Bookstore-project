@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.profile-header {
+  background: linear-gradient(135deg, #5C3317, #8B4513);
+  color: #F5F5DC;
+  padding: 3rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  background: #DAA520;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: #FFF;
+  margin: 0 auto 1rem;
+  border: 5px solid #F5F5DC;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.profile-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #DAA520;
+  margin: 0 0 0.5rem 0;
+}
+
+.profile-email {
+  color: #F5E6D3;
+  font-size: 1.1rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 992px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-card {
+  background: #FFF;
+  border: 2px solid #D4C4B0;
+  border-radius: 10px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border-color: #DAA520;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #5C3317;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.profile-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-menu li {
+  margin-bottom: 0.75rem;
+}
+
+.profile-menu a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #F5F5DC;
+  border-radius: 8px;
+  color: #5C3317;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.profile-menu a:hover {
+  background: #8B4513;
+  color: #FFF;
+  padding-left: 1.5rem;
+}
+
+.profile-menu i {
+  font-size: 1.2rem;
+  width: 25px;
+}
+
+.stat-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  background: #F5E6D3;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 2px solid #D4C4B0;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  border-color: #8B4513;
+}
+
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.stat-label {
+  color: #6B5B4F;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid #F5E6D3;
+}
+
+.info-label {
+  color: #6B5B4F;
+  font-weight: 600;
+}
+
+.info-value {
+  color: #5C3317;
+}
+
+.btn-edit-profile {
+  background: #8B4513;
+  color: #FFF;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-edit-profile:hover {
+  background: #5C3317;
+  color: #FFF;
+  transform: translateY(-2px);
+}
+
+.recommended-books {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.recommended-book {
+  background: #F5F5DC;
+  border: 2px solid #D4C4B0;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.recommended-book:hover {
+  transform: translateY(-5px);
+  border-color: #DAA520;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.book-icon {
+  font-size: 3rem;
+  color: #8B4513;
+  margin-bottom: 0.75rem;
+}
+
+.book-title {
+  font-family: 'Playfair Display', serif;
+  color: #5C3317;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.book-price {
+  color: #8B4513;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.logout-btn {
+  width: 100%;
+  background: #DC3545;
+  color: #FFF;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.logout-btn:hover {
+  background: #C82333;
+  color: #FFF;
+}
+
+.badge-premium {
+  display: inline-block;
+  background: #DAA520;
+  color: #2C1810;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+</style>
+
+<div class="profile-header">
+  <div class="profile-avatar">
+    <i class="fas fa-user"></i>
+  </div>
+  <h1 class="profile-name">{{ request.user.username }}</h1>
+  <p class="profile-email">{{ request.user.email }}</p>
+  <p style="margin-top: 0.5rem; color: #F5E6D3;">
+    <i class="fas fa-calendar"></i> Member since {{ request.user.date_joined|date:"M Y" }}
+  </p>
+</div>
+
+<div class="profile-grid">
+  <!-- Sidebar -->
+  <div class="profile-sidebar">
+    <!-- Quick Links -->
+    <div class="profile-card">
+      <h3 class="card-title">
+        <i class="fas fa-bars"></i> Quick Links
+      </h3>
+      <ul class="profile-menu">
+        <li>
+          <a href="{% url 'orders:my_orders' %}">
+            <i class="fas fa-box"></i>
+            <span>My Orders</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'wishlist:view' %}">
+            <i class="fas fa-heart"></i>
+            <span>Wishlist</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'books:view_cart' %}">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Shopping Cart</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Share Wishlist -->
+    <div class="profile-card">
+      <h3 class="card-title">
+        <i class="fas fa-share-alt"></i> Share
+      </h3>
+      <a href="{% url 'wishlist:public' request.user.id %}" class="btn-edit-profile" style="width: 100%; text-align: center;">
+        <i class="fas fa-link"></i> My Public Wishlist
+      </a>
+    </div>
+
+    <!-- Logout -->
+    <a href="{% url 'users:logout' %}" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <div>
+    <!-- Statistics -->
+    <div class="profile-card">
+      <h3 class="card-title">
+        <i class="fas fa-chart-bar"></i> My Statistics
+      </h3>
+      <div class="stat-box">
+        <div class="stat-item">
+          <div class="stat-value">{{ total_orders|default:0 }}</div>
+          <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ wishlist_count|default:0 }}</div>
+          <div class="stat-label">Wishlist Items</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">₹{{ total_spent|default:0 }}</div>
+          <div class="stat-label">Total Spent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Information -->
+    <div class="profile-card">
+      <h3 class="card-title">
+        <i class="fas fa-info-circle"></i> Account Information
+      </h3>
+      
+      <div class="info-row">
+        <span class="info-label">Username</span>
+        <span class="info-value">{{ request.user.username }}</span>
+      </div>
+      
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value">{{ request.user.email }}</span>
+      </div>
+      
+      <div class="info-row">
+        <span class="info-label">Account Status</span>
+        <span class="info-value" style="color: #28A745;">
+          <i class="fas fa-check-circle"></i> Active
+        </span>
+      </div>
+      
+      <div class="info-row" style="border-bottom: none;">
+        <span class="info-label">Member Since</span>
+        <span class="info-value">{{ request.user.date_joined|date:"d M Y" }}</span>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <a href="#" class="btn-edit-profile">
+          <i class="fas fa-edit"></i> Edit Profile
+        </a>
+        <a href="#" class="btn-edit-profile" style="background: #6C757D; margin-left: 0.5rem;">
+          <i class="fas fa-key"></i> Change Password
+        </a>
+      </div>
+    </div>
+
+    <!-- Recommended Books -->
+    <div class="profile-card">
+      <h3 class="card-title">
+        <i class="fas fa-star"></i> Recommended for You
+      </h3>
+      
+      {% if recommended %}
+      <div class="recommended-books">
+        {% for book in recommended %}
+        <div class="recommended-book">
+          <div class="book-icon">
+                    <!-- For any book image display -->
+        {% if item.book.image %}
+           <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}">
+        {% else %}
+            <i class="fas fa-book"></i>
+        {% endif %}
+          </div>
+          <div class="book-title">{{ book.title|truncatechars:30 }}</div>
+          <div class="book-price">₹{{ book.price }}</div>
+          <a href="{% url 'books:detail' book.id %}" style="color: #8B4513; font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">
+            View Details →
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <!-- Placeholder recommendations -->
+      <div class="recommended-books">
+        {% for i in "1234" %}
+        <div class="recommended-book">
+          <div class="book-icon">
+        {% if item.book.image %}
+          <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 5px;">
+        {% else %}
+          <i class="fas fa-book"></i>
+        {% endif %}
+      </div>
+          <div class="rec-book-title">{{ book.title|truncatechars:35 }}</div>
+        <div class="rec-book-price">₹{{ book.price }}</div>
+          <a href="#" style="color: #8B4513; font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">
+            View Details →
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <!-- Recent Activity -->
+    <div class="profile-card">
+      <h3 class="card-title">
+        <i class="fas fa-history"></i> Recent Activity
+      </h3>
+      <div style="color: #6B5B4F;">
+        <p style="margin-bottom: 0.75rem;">
+          <i class="fas fa-circle" style="font-size: 0.5rem; color: #8B4513;"></i>
+          Last login: {{ request.user.last_login|date:"d M Y, h:i A"|default:"N/A" }}
+        </p>
+        <p style="margin-bottom: 0.75rem;">
+          <i class="fas fa-circle" style="font-size: 0.5rem; color: #8B4513;"></i>
+          Last order: {% if last_order %}{{ last_order.created_at|date:"d M Y" }}{% else %}No orders yet{% endif %}
+        </p>
+        <p style="margin: 0;">
+          <i class="fas fa-circle" style="font-size: 0.5rem; color: #8B4513;"></i>
+          Account created: {{ request.user.date_joined|date:"d M Y" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Help Section -->
+<div style="background: #F5E6D3; padding: 2rem; border-radius: 10px; margin-top: 3rem; text-align: center;">
+  <h4 style="font-family: 'Playfair Display', serif; color: #5C3317; margin-bottom: 1rem;">
+    <i class="fas fa-question-circle"></i> Need Help?
+  </h4>
+  <p style="color: #6B5B4F; margin: 0 0 1rem 0;">
+    Have questions about your account? We're here to assist you!
+  </p>
+  <a href="#" style="color: #8B4513; font-weight: 600; text-decoration: none;">
+    <i class="fas fa-headset"></i> Contact Support
+  </a>
+</div>
+
+{% endblock %}

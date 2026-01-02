@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>📊 Admin Dashboard</h2>
+
+<div class="card">Total Orders<br><b>{{ total_orders }}</b></div>
+<div class="card">Paid Orders<br><b>{{ paid_orders }}</b></div>
+<div class="card">Unpaid Orders<br><b>{{ unpaid_orders }}</b></div>
+<div class="card">Total Sales<br><b>₹{{ total_sales }}</b></div>
+<div class="card">Books<br><b>{{ total_books }}</b></div>
+<div class="card">Users<br><b>{{ total_users }}</b></div>
+
+<h3>🕒 Recent Orders</h3>
+
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>User</th>
+        <th>Total</th>
+        <th>Payment Status</th>
+    </tr>
+
+    {% for order in recent_orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user.username }}</td>
+        <td>₹{{ order.total_amount }}</td>
+        <td>
+            {% if order.paid %}
+                ✅ Paid
+            {% else %}
+                ❌ Pending
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No Orders Found</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total Sales: ₹{{ total_sales }}</h3>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<canvas id="salesChart" height="100"></canvas>
+
+<script>
+new Chart(document.getElementById('salesChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Monthly Sales',
+            data: values,
+            borderWidth: 2,
+            fill: false
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
