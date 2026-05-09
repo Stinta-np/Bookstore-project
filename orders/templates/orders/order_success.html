@@ -440,12 +440,11 @@
       {% for item in order.items.all %}
       <div class="order-item">
         <div class="item-image">
-                  <!-- For any book image display -->
-        {% if item.book.image %}
-           <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}">
-        {% else %}
-            <i class="fas fa-book"></i>
-        {% endif %}
+         {% if item.book.image %}
+   <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+{% else %}
+    <i class="fas fa-book"></i>
+{% endif %}
         </div>
         <div class="item-details">
           <h4 class="item-title">{{ item.book.title }}</h4>
@@ -566,11 +565,11 @@
       {% for book in recommended_books %}
       <a href="{% url 'books:detail' book.id %}" class="recommended-book">
         <div class="rec-book-icon">
-          {% if item.book.image %}
-            <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 5px;">
-          {% else %}
-            <i class="fas fa-book"></i>
-          {% endif %}
+          {% if book.image %}
+  <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 5px;">
+{% else %}
+  <i class="fas fa-book"></i>
+{% endif %}
         </div>
         <div class="rec-book-title">{{ book.title|truncatechars:35 }}</div>
         <div class="rec-book-price">₹{{ book.price }}</div>

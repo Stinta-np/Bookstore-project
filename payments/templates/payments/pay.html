@@ -230,11 +230,11 @@
   <div class="payment-card">
     <!-- Amount Display -->
     <div class="amount-display">
-      <div class="amount-label">
-        <i class="fas fa-rupee-sign"></i> Total Amount
-      </div>
-      <div class="amount-value">₹{{ amount|default:"0" }}</div>
-    </div>
+  <div class="amount-label">
+    <i class="fas fa-rupee-sign"></i> Total Amount
+  </div>
+  <div class="amount-value">₹{{ order.total_amount }}</div> 
+</div>
 
     <!-- Order Summary -->
     <div class="order-summary">
@@ -351,9 +351,9 @@ document.getElementById('pay-btn').addEventListener('click', function() {
   } else if (selectedPayment === 'cod') {
     // For COD, redirect to order success
     if (confirm('Confirm Cash on Delivery?')) {
-      window.location.href = "{% url 'orders:order_success' order.id %}?cod=true";
+        window.location.href = "{% url 'orders:success' order.id %}";  // Fixed URL name
     }
-  }
+}
 });
 </script>
 

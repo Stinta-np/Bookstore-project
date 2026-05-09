@@ -203,8 +203,9 @@ def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     
     # Get recommended books (optional)
-    from books.models import Book
-    recommended_books = Book.objects.all()[:6]
+    recommended_books = Book.objects.exclude(
+        id__in=order.items.values_list('book_id', flat=True)
+    )[:6]
     
     # Remove any email_sent checks - just render the page
     return render(request, 'orders/order_success.html', {
